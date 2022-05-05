@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script>
+  // A quick check to make sure the code is loaded and running
+console.log("hi");
+// creating a class that will allow us to make instances of the rain
+// these objects will track position, size, colour and speed in the y direction of each instance,
+// they will move, draw themselves and grow if they hit another object
+class Rain{
+  // construct the rain with a x position, y position, size, colour and speed in the y direction defined at creation
+  // also input the canvas and context to draw on
+  constructor(x, y, size, colour, myCan, ctx, speedY){
+    // uses inputs to set the properties
+  this.x = x;
+  this.y = y;
+  // setting colour and size properties (same starting values for all objects)
+  this.size = size;
+  this.colour = colour;
+  this.myCan = myCan;
+  this.ctx = ctx;
+  // setting speed property (same starting values for all objects)
+  this.speedY = speedY;
+  }
+  // draw function uses the context to draw a circle
+  draw(){
+    // sets the colour
+    this.ctx.fillStyle = this.colour;
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    this.ctx.fill();
+  }
+  // move function updates position based on speed and size
+  move(){
+      if(this.size < 2 ){
+      this.speedY = 0.1;
+    }
+    if(this.size > 2 && this.size < 3){
+    this.speedY = 0.3;
+    }
+  if(this.size > 3){
+  this.speedY = 0.5;
+  }
+    if(this.y > 500){
+      this.y = 0;
+      this.x = Math.random()*500;
+}
+  this.y = this.speedY + this.y;
+}
+// checking if we are touching another rain object and grow in size if they are
+  touch(){
+    // finding the sum of both Rain object sizes
+    let r = this.size + this.size;
+    // finding the distance between the centres of the two rain objects
+    let d = Math.abs(this.x - this.x);
+    // seeing if the distance is less than the sum of radii, which would mean that they are touching
+    if (d < r){
+      this.size = this.size + 0.001;
+  }
+}
+}
+//declaring variables to use in functions
+let myCan;
+let ctx;
+let myArray = [];
+
+function setup(){
+  // setting up the canvas and context by accessing the HTML document
+  myCan = document.getElementById("myCanvas");
+  ctx = myCan.getContext('2d');
+  for (let i = 0; i < 400; i++) {
+    //setting random numbers to use as the x and y coordinates of the object
+    //chooses a number between 0-500
+          let x = Math.random()*500;
+          //chosses a number between 0-250
+          let y = Math.random()*250;
+          // creating a new Rain object and adding it to the array
+           //sets the values of each property of the object
+          myArray.push(new Rain(x, y, Math.random()*3+1,'rgb(0, 50, 255)', myCan, ctx, 0));
+      }
+      // call the draw function to begin the animation
+  draw();
+}
+
+function draw(){
+  // going to the html (document) and finding the id "myCanvas"
+		let myCan = document.getElementById("myCanvas");
+    // setting up a drawing 'context' for our canvas
+		let ctx = myCan.getContext('2d');
+    // clears the screen
+    ctx.clearRect(0, 0, myCan.width, myCan.height);
+    //this loop draws the circle multiple times onto the screen
+    for (let i = 0; i < myArray.length; i++) {
+        myArray[i].draw();
+        myArray[i].move();
+        myArray[i].touch();
+        }
+  // when the animation is complete move to the next frame by running this draw funtion again
+    window.requestAnimationFrame(draw);
+  }
+    </script>
+</head>
+<body onload="setup()">
+  Here is my window-->
+<!-- setting up our canvas, making it 500px square and outlining with a border -->
+<!-- also giving it an "id" so we can call on it from our Javascript -->
+    <canvas width="500px" height="500px" style="border: solid" id="myCanvas"></canvas>
+</body>
+</html>

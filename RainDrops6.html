@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script>
+console.log("hi");
+class Rain{
+  constructor(x, y, size, colour, myCan, ctx, speedY){
+  this.x = x;
+  this.y = y;
+  this.size = size;
+  this.colour = colour;
+  this.myCan = myCan;
+  this.ctx = ctx;
+  this.speedY = speedY;
+  }
+
+  draw(){
+    this.ctx.fillStyle = this.colour;
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    this.ctx.fill();
+  }
+  move(){
+      this.y = this.speedY + this.y;
+  }
+}
+let myCan;
+let ctx;
+let myArray = [];
+
+function setup(){
+  myCan = document.getElementById("myCanvas");
+  ctx = myCan.getContext('2d');
+  for (let i = 0; i < 100; i++) {
+
+          let x = Math.random()*500;
+          let y = Math.random()*100;
+          myArray.push(new Rain(x, y, Math.random()*4+2,'rgb(0, 50, 255)', myCan, ctx, 1));
+      }
+  draw();
+}
+
+function draw(){
+		let myCan = document.getElementById("myCanvas");
+		let ctx = myCan.getContext('2d');
+    ctx.clearRect(0, 0, myCan.width, myCan.height);
+    for (let i = 0; i < myArray.length; i++) {
+        myArray[i].draw();
+        myArray[i].move();
+        }
+    window.requestAnimationFrame(draw);
+  }
+    </script>
+</head>
+<body onload="setup()">
+  Here is my window-->
+<!-- setting up our canvas, making it 500px square and outlining with a border -->
+<!-- also giving it an "id" so we can call on it from our Javascript -->
+    <canvas width="500px" height="500px" style="border: solid" id="myCanvas"></canvas>
+</body>
+</html>
